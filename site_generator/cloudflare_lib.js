@@ -102,11 +102,3 @@ exports.initialize_domain = (domain, dns_recordset) => {
         return data
     })
 }
-
-
-
-(async () => {
-    const config = fs.readJsonSync('./output.json')
-
-   //  console.log(await exports.get_zone(`${config.PROJECT}.${config.DOMAIN}`))
-})()

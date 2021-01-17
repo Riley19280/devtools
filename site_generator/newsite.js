@@ -160,7 +160,7 @@ async function run() {
     if(PROJECT_SETUP) {
         let p = path.join(process.env.PROJECT_LOCATIONS, PROJECT)
         fs.ensureDir(p)
-        console.log(`Cloning and installing project ${process.env.DEFAULT_PROJECT_URL}`)
+        console.log(`Cloning and installing project from ${process.env.DEFAULT_PROJECT_URL}`)
         await exec_cmd(`cd ${p} && git clone ${process.env.DEFAULT_PROJECT_URL} . && rm -rf .git && npm install`)
 
         if(GITHUB_SETUP) {
@@ -174,6 +174,7 @@ async function run() {
     await write_output()
 }
 
+check_env_vars()
 
 run()
 
@@ -324,6 +325,33 @@ function exec_cmd(cmd) {
     })
 }
 
+function check_env_vars() {
+    let not_found = []
+    if(!process.env.AWS_ACCESS_KEY)
+        not_found.push('AWS_ACCESS_KEY')
+    if(!process.env.AWS_SECRET)
+        not_found.push('AWS_SECRET')
+    if(!process.env.CLOUDFLARE_EMAIL)
+        not_found.push('CLOUDFLARE_EMAIL')
+    if(!process.env.CLOUDFLARE_ACCOUNT_ID)
+        not_found.push('CLOUDFLARE_ACCOUNT_ID')
+    if(!process.env.CLOUDFLARE_API_KEY)
+        not_found.push('CLOUDFLARE_API_KEY')
+    if(!process.env.GITHUB_KEY)
+        not_found.push('GITHUB_KEY')
+    if(!process.env.PROJECT_LOCATIONS)
+        not_found.push('PROJECT_LOCATIONS')
+    if(!process.env.DEFAULT_PROJECT_URL)
+        not_found.push('DEFAULT_PROJECT_URL')
+    if(!process.env.EDITOR_PATH)
+        not_found.push('EDITOR_PATH')
+
+    if(not_found.length > 0) {
+        console.error(`Aborted -> One or more environment variables was not found: ${not_found.join(', ')}`)
+        process.exit(1)
+    }
+
+}
 
 function write_output() {
     console.log(`Writing output file ${PROJECT}.json`)
