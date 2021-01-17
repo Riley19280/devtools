@@ -165,8 +165,10 @@ async function run() {
 
         if(GITHUB_SETUP) {
             console.log('Initializing git repository and pushing..')
-            await exec_cmd(`cd ${p} && git init && git add -A && git commit -m 'Initial Commit' && git remote add origin ${OUTPUT.github.clone} && git push --set-upstream origin master && git push`)
+            await exec_cmd(`cd ${p} && git init && git add -A && git commit -m 'Initial Commit' && git remote add origin ${OUTPUT.github.clone} && git push --set-upstream origin master`)
         }
+
+        await exec_cmd(`${process.env.EDITOR_PATH} ${p}`)
     }
 
     await write_output()
